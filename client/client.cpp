@@ -4,94 +4,195 @@ client::client(QWidget* parent) : QMainWindow(parent)
 {
     ui = new Ui::clientClass;
     ui->setupUi(this);
-
-    connect(ui->B1, &QPushButton::clicked, this, &client::sendData);
+    ui->idLINE->hide();
+    ui->nameLINE->hide();
+    ui->priceLINE->hide();
+    ui->quantityLINE->hide();
+    ui->IDlabel->hide();
+    ui->Namelabel->hide();
+    ui->Pricelabel->hide();
+    ui->Quantitylabel->hide();
+    connect(ui->B1, &QPushButton::clicked, this, &client::AddProduct);
     connect(ui->B2, &QPushButton::clicked, this, &client::deleteData);
     connect(ui->B3, &QPushButton::clicked, this, &client::updateData);
     connect(ui->B4, &QPushButton::clicked, this, &client::getDataById);
     connect(ui->B5, &QPushButton::clicked, this, &client::getAllData);
     connect(ui->B6, &QPushButton::clicked, this, &client::close);
+    connect(ui->rememberBTN, &QPushButton::clicked, this, &client::rememberAdress);
+    connect(ui->SendBTN, &QPushButton::clicked, this, &client::sendData);
 }
 
-client::~client()
-{
-}
+
 
 void client::sendData()
 {
-    QString id = ui->idLINE->text();
-    QString name = ui->nameLINE->text();
-    QString price = ui->priceLINE->text();
-    QString quantity = ui->quantityLINE->text();
+    if (ui->B1->isChecked()) {
+        QString id = ui->idLINE->text();
+        QString name = ui->nameLINE->text();
+        QString price = ui->priceLINE->text();
+        QString quantity = ui->quantityLINE->text();
 
-    QJsonObject json;
-    json["id"] = id;
+        QJsonObject json;
+        json["id"] = id;
 
-    if (!name.isEmpty()) {
-        json["name"] = name;
-    }
-    else {
-        json["name"] = QJsonValue::Null;
+        if (!name.isEmpty()) {
+            json["name"] = name;
+        }
+        else {
+            json["name"] = QJsonValue::Null;
+        }
+
+        if (!price.isEmpty()) {
+            json["price"] = price;
+        }
+        else {
+            json["price"] = QJsonValue::Null;
+        }
+
+        if (!quantity.isEmpty()) {
+            json["quantity"] = quantity;
+        }
+        else {
+            json["quantity"] = QJsonValue::Null;
+        }
+
+        sendRequest("PUT", address + QString("/products/add"), json);
     }
 
-    if (!price.isEmpty()) {
-        json["price"] = price;
+    if (ui->B2->isChecked()) {
+        QString id = ui->idLINE->text();
+        sendRequest("DELETE", address + QString("/products/%1").arg(id));
     }
-    else {
-        json["price"] = QJsonValue::Null;
+    if (ui->B3->isChecked()) {
+        QString id = ui->idLINE->text();
+        QString name = ui->nameLINE->text();
+        QString price = ui->priceLINE->text();
+        QString quantity = ui->quantityLINE->text();
+
+        QJsonObject json;
+        json["id"] = id;
+
+
+        if (!name.isEmpty()) {
+            json["name"] = name;
+        }
+
+
+        if (!price.isEmpty()) {
+            json["price"] = price;
+        }
+
+        if (!quantity.isEmpty()) {
+            json["quantity"] = quantity;
+        }
+        sendRequest("PUT", address + QString("/products/%1").arg(id), json);
+    }
+    if (ui->B4->isChecked()) {
+        QString id = ui->idLINE->text();
+        sendRequest("GET", address + QString("/products/%1").arg(id));
     }
 
-    if (!quantity.isEmpty()) {
-        json["quantity"] = quantity;
-    }
-    else {
-        json["quantity"] = QJsonValue::Null;
-    }
 
-    sendRequest("PUT", QString("http://192.168.1.4:5000/products/add"), json);
+}
+
+void client::AddProduct()
+{
+    if (ui->B1->isChecked()) {
+        ui->idLINE->show();
+        ui->nameLINE->show();
+        ui->priceLINE->show();
+        ui->quantityLINE->show();
+        ui->IDlabel->show();
+        ui->Namelabel->show();
+        ui->Pricelabel->show();
+        ui->Quantitylabel->show();
+        disableOtherButtons(ui->B1);
+    }
+    else
+    {
+        ui->nameLINE->clear();
+        ui->priceLINE->clear();
+        ui->quantityLINE->clear();
+        ui->idLINE->clear();
+        ui->nameLINE->hide();
+        ui->priceLINE->hide();
+        ui->quantityLINE->hide();
+        ui->idLINE->hide();
+        ui->IDlabel->hide();
+        ui->Namelabel->hide();
+        ui->Pricelabel->hide();
+        ui->Quantitylabel->hide();
+        enableAllButtons();
+    }
+    
 }
 
 void client::deleteData()
 {
-    QString id = ui->idLINE->text();
-    sendRequest("DELETE", QString("http://192.168.1.4:5000/products/%1").arg(id));
+    if (ui->B2->isChecked()) {
+        ui->idLINE->show();
+        ui->IDlabel->show();
+        disableOtherButtons(ui->B2);
+    }
+    else
+    {
+        ui->idLINE->clear();
+        ui->idLINE->hide();
+        ui->IDlabel->hide();
+        enableAllButtons();
+    }
 }
 
 void client::updateData()
 {
-    QString id = ui->idLINE->text();
-    QString name = ui->nameLINE->text();
-    QString price = ui->priceLINE->text();
-    QString quantity = ui->quantityLINE->text();
-
-    QJsonObject json;
-    json["id"] = id;
-
-
-    if (!name.isEmpty()) {
-        json["name"] = name;
+    if (ui->B3->isChecked()) {
+        ui->idLINE->show();
+        ui->nameLINE->show();
+        ui->priceLINE->show();
+        ui->quantityLINE->show();
+        ui->IDlabel->show();
+        ui->Namelabel->show();
+        ui->Pricelabel->show();
+        ui->Quantitylabel->show();
+        disableOtherButtons(ui->B3);
     }
-
-
-    if (!price.isEmpty()) {
-        json["price"] = price;
+    else
+    {
+        ui->nameLINE->clear();
+        ui->priceLINE->clear();
+        ui->quantityLINE->clear();
+        ui->idLINE->clear();
+        ui->nameLINE->hide();
+        ui->priceLINE->hide();
+        ui->quantityLINE->hide();
+        ui->idLINE->hide();
+        ui->IDlabel->hide();
+        ui->Namelabel->hide();
+        ui->Pricelabel->hide();
+        ui->Quantitylabel->hide();
+        enableAllButtons();
     }
-
-    if (!quantity.isEmpty()) {
-        json["quantity"] = quantity;
-    }
-    sendRequest("PUT", QString("http://192.168.1.4:5000/products/%1").arg(id), json);
 }
 
 void client::getDataById()
 {
-    QString id = ui->idLINE->text();
-    sendRequest("GET", QString("http://192.168.1.4:5000/products/%1").arg(id));
+    if (ui->B4->isChecked()) {
+        ui->idLINE->show();
+        ui->IDlabel->show();
+        disableOtherButtons(ui->B4);
+    }
+    else
+    {
+        ui->idLINE->clear();
+        ui->idLINE->hide();
+        ui->IDlabel->hide();
+        enableAllButtons();
+    }
 }
 
 void client::getAllData()
 {
-    sendRequest("GET", "http://192.168.1.4:5000/products");
+    sendRequest("GET", address + "/products");
 }
 
 
@@ -172,4 +273,55 @@ void client::handleResponse(QNetworkReply* reply)
         }
     }
 
+}
+
+void client::rememberAdress()
+{
+    if (ui->rememberBTN->isChecked()) {
+        QString address_ = ui->AddressLine->text();
+        address = address_;
+    }
+    else {
+        address.clear(); // Очищаем адрес, когда кнопка отпущена
+    }
+}
+
+
+client::~client()
+{
+}
+
+
+void client::disableOtherButtons(QPushButton* activeButton)
+{
+    QList<QPushButton*> buttons = {
+        ui->B1,
+        ui->B2,
+        ui->B3,
+        ui->B4,
+        ui->B5,
+        ui->B6,
+    };
+
+    for (QPushButton* button : buttons) {
+        if (button != activeButton) {
+            button->setEnabled(false);
+        }
+    }
+}
+
+void client::enableAllButtons()
+{
+    QList<QPushButton*> buttons = {
+        ui->B1,
+        ui->B2,
+        ui->B3,
+        ui->B4,
+        ui->B5,
+        ui->B6,
+    };
+
+    for (QPushButton* button : buttons) {
+        button->setEnabled(true);
+    }
 }

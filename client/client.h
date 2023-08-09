@@ -24,17 +24,21 @@ class client : public QMainWindow
 public:
     client(QWidget* parent = nullptr);
     ~client();
-
+    void enableAllButtons();
+    void disableOtherButtons(QPushButton* activeButton);
 private:
     Ui::clientClass* ui;
     QTcpSocket* socket;
-
+    QString address;
+    QPushButton* activeButton;
 private slots:
-    void sendData();
+    void AddProduct();
     void deleteData();
     void updateData();
     void getDataById();
     void getAllData();
     void sendRequest(const QString& method, const QString& url, const QJsonObject& data = QJsonObject());
     void handleResponse(QNetworkReply* reply);
+    void rememberAdress();
+    void sendData();
 };
