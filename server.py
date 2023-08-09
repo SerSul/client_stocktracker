@@ -6,10 +6,10 @@ app = Flask(__name__)
 def MySQLconnect():
     try:
         connection = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="123q",
-            database="stocktracker"
+            host="",
+            user="",
+            password="",
+            database=""
         )
         cursor = connection.cursor()
         return connection, cursor
