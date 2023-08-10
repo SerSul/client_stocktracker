@@ -1,5 +1,5 @@
 #include "client.h"
-//Разделить код GUI и логику взаимодействия с сервером
+//+++Разделить код GUI и логику взаимодействия с сервером
 
 
 client::client(QWidget* parent) : QMainWindow(parent)
