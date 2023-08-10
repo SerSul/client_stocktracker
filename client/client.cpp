@@ -1,4 +1,6 @@
 #include "client.h"
+//Разделить код GUI и логику взаимодействия с сервером
+
 
 client::client(QWidget* parent) : QMainWindow(parent)
 {
@@ -282,7 +284,7 @@ void client::rememberAdress()
         address = address_;
     }
     else {
-        address.clear(); // ������� �����, ����� ������ ��������
+        address.clear(); // Î÷èùàåì àäðåñ, êîãäà êíîïêà îòïóùåíà
     }
 }
 
