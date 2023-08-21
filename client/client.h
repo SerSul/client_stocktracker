@@ -3,19 +3,14 @@
 #include <QtWidgets/QMainWindow>
 #include <QKeyEvent>
 #include "ui_client.h"
-
+#include "Network.h"
 #include <QMessageBox>
-#include <QTcpSocket>
-#include <QHostAddress>
+
 #include <QDebug>
 #include <QString>
 #include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
+
 #include <QTextBrowser>
-#include <QtNetwork>
-#include <iostream>
 
 class client : public QMainWindow
 {
@@ -31,15 +26,17 @@ private:
     QTcpSocket* socket;
     QString address;
     QPushButton* activeButton;
+    Network network;
+
 private slots:
     void AddProduct();
     void deleteData();
     void updateData();
     void getDataById();
     void getAllData();
-    void sendRequest(const QString& method, const QString& url, const QJsonObject& data = QJsonObject());
-    void handleResponse(QNetworkReply* reply);
     void rememberAdress();
     void sendData();
+
+    void handleNetworkResponse(const QString& response);
 };
 
