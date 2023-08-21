@@ -42,3 +42,4 @@ private slots:
     void rememberAdress();
     void sendData();
 };
+
